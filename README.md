@@ -61,6 +61,21 @@ Optional notification is sent from the Edge Function after a request has been st
 
 ## Deployment and direct-route refreshes
 
+### GitHub Pages
+
+1. Push these changes to the `main` branch on GitHub.
+2. In the repository's **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**. Publishing the source branch directly will not build this Vite app.
+3. Open **Actions → Deploy to GitHub Pages** and run the workflow (or push another change to `main`). It installs dependencies, tests, builds, and deploys `dist/`.
+4. Open the URL shown by the deployment, normally `https://MohdZeeshanAhmed.github.io/WayFindr/`.
+
+The workflow uses the Pages base path for scripts, styles, and local images. The Pages build uses hash routes such as `/WayFindr/#/destinations/canada`, so navigation and refreshes work without server rewrites. Standard builds retain browser routes for Vercel/Netlify.
+
+For backend features, add repository **Settings → Secrets and variables → Actions → Variables** named `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` before building. Only use the public anon/publishable key. The public pages work without these variables.
+
+To preview Pages locally, run `npm run build:pages` then `npm run preview -- --host 127.0.0.1` and open `http://127.0.0.1:4173/WayFindr/`.
+
+### Other static hosts
+
 Deploy `dist/` to a static host. Configure SPA rewrites so nested paths (for example `/destinations/canada`, `/courses/demo-01`, and `/admin`) serve `index.html`; otherwise direct refreshes return a host 404. Vercel can use the included `vercel.json`; Netlify can use the included `_redirects` file. Configure the production `VITE_SITE_URL`, Supabase function origin, and environment variables for the target environment.
 
 The app sets route-specific document titles, descriptions, and canonical URLs client-side. A static SPA may not provide complete per-route metadata to crawlers that do not execute JavaScript. For stronger indexing and server-rendered social cards, add an SSR/prerender stage or hosting integration; create and host a real social preview image before launch.

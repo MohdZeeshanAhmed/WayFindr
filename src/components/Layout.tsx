@@ -43,10 +43,12 @@ export function Layout() {
     }
     let canonical = document.querySelector('link[rel="canonical"]')
     if (!canonical) { canonical = document.createElement('link'); canonical.setAttribute('rel', 'canonical'); document.head.append(canonical) }
-    canonical.setAttribute('href', `${import.meta.env.VITE_SITE_URL || window.location.origin}${location.pathname}`)
+    const siteUrl = (import.meta.env.VITE_SITE_URL || `${window.location.origin}${import.meta.env.BASE_URL}`).replace(/\/$/, '')
+    const route = import.meta.env.MODE === 'github-pages' ? `/#${location.pathname}` : location.pathname
+    canonical.setAttribute('href', `${siteUrl}${route}`)
   }, [title, desc, location.pathname])
   return <>
-    <a className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-3" href="#main">Skip to content</a>
+    <a className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-3" href="#main" onClick={(event) => { event.preventDefault(); document.getElementById('main')?.focus() }}>Skip to content</a>
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur-md">
       <div className="wrap flex h-[76px] items-center justify-between px-5 lg:px-0">
         <Link aria-label="WayFindr home" to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
@@ -64,7 +66,7 @@ export function Layout() {
         <Link to="/consultation" onClick={() => setOpen(false)} className="button-primary mt-4 w-full">Book a Free Consultation</Link>
       </nav>}
     </header>
-    <main id="main"><Outlet /></main>
+    <main id="main" tabIndex={-1}><Outlet /></main>
     <footer className="bg-navy text-white">
       <div className="wrap grid gap-12 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] lg:px-0">
         <div><Link to="/" className="font-display text-2xl font-extrabold tracking-tight">wayfindr<span className="text-teal">.</span></Link><p className="mt-3 max-w-sm text-sm leading-6 text-slate-300">Find Your Way to a Master’s Abroad.<br />Thoughtful postgraduate guidance for your next chapter.</p><Link to="/consultation" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#9bd9cb]">Let’s plan your next step <ArrowUpRight size={15} /></Link></div>
@@ -81,6 +83,6 @@ export function PageIntro({ eyebrow, title, text }: { eyebrow?: string; title: s
 }
 
 export function Photo({ id, alt, className = '', loading = 'lazy' }: { id: string; alt: string; className?: string; loading?: 'lazy' | 'eager' }) {
-  const src = id.startsWith('/') ? id : `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`
+  const src = id.startsWith('/') && !id.startsWith('//') ? `${import.meta.env.BASE_URL || '/'}${id.slice(1)}` : id.startsWith('//') ? id : `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`
   return <img src={src} alt={alt} loading={loading} onError={(event) => { event.currentTarget.style.display = 'none'; event.currentTarget.parentElement?.classList.add('image-fallback') }} className={`h-full w-full object-cover ${className}`} />
 }
