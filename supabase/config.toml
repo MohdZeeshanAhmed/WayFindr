@@ -1,0 +1,4 @@
+project_id = "wayfindr"
+
+[functions.public-submission]
+verify_jwt = false
