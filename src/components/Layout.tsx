@@ -43,7 +43,7 @@ export function Layout() {
     }
     let canonical = document.querySelector('link[rel="canonical"]')
     if (!canonical) { canonical = document.createElement('link'); canonical.setAttribute('rel', 'canonical'); document.head.append(canonical) }
-    const siteUrl = (import.meta.env.VITE_SITE_URL || `${window.location.origin}${import.meta.env.BASE_URL}`).replace(/\/$/, '')
+    const siteUrl = (import.meta.env.VITE_SITE_URL || new URL(import.meta.env.BASE_URL, window.location.href).href).replace(/\/$/, '')
     const route = import.meta.env.MODE === 'github-pages' ? `/#${location.pathname}` : location.pathname
     canonical.setAttribute('href', `${siteUrl}${route}`)
   }, [title, desc, location.pathname])

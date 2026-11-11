@@ -68,7 +68,7 @@ Optional notification is sent from the Edge Function after a request has been st
 3. Open **Actions → Deploy to GitHub Pages** and run the workflow (or push another change to `main`). It installs dependencies, tests, builds, and deploys `dist/`.
 4. Open the URL shown by the deployment, normally `https://MohdZeeshanAhmed.github.io/WayFindr/`.
 
-The workflow uses the Pages base path for scripts, styles, and local images. The Pages build uses hash routes such as `/WayFindr/#/destinations/canada`, so navigation and refreshes work without server rewrites. Standard builds retain browser routes for Vercel/Netlify.
+The Pages build uses relative URLs for scripts, styles, and local images, so the same bundle works at the GitHub project URL and at a custom domain such as `https://wayfindroverseas.com/`. It uses hash routes such as `/WayFindr/#/destinations/canada`, so navigation and refreshes work without server rewrites. Standard builds retain browser routes for Vercel/Netlify. After changing a custom domain in Settings → Pages, rerun the deployment workflow.
 
 For backend features, add repository **Settings → Secrets and variables → Actions → Variables** named `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` before building. Only use the public anon/publishable key. The public pages work without these variables.
 
